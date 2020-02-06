@@ -1,7 +1,7 @@
 import datetime
 import sys
-import csv
 import webbrowser
+from numpy import exp, array, random, dot
 from random import choice, randint
 import pyttsx3
 from PyQt5.QtCore import Qt
@@ -104,40 +104,40 @@ class Bot(QWidget):  # y = 21, x = 63
         else:
             self.flag_voice = False
 
-    def bot_answer(self, phrase):  # Ответы бота
-        phrase = phrase.lower()
-        if ('прив' in phrase) or ('здравствуй' in phrase) or ('хай' in phrase) \
-                or ('хеллоу' in phrase) or ('здаров' in phrase):
+    def bot_answer(self, ph):  # Ответы бота
+        ph = ph.lower()
+        if ('прив' in ph) or ('здравствуй' in ph) or ('хай' in ph) \
+                or ('хеллоу' in ph) or ('здаров' in ph):
             return choice(['Привет', 'Приветик', 'Здравствуйте', 'Приветствую',
                            'Здравствуй'])
-        elif 'время' in phrase or ('котор' in phrase and 'ча' in phrase):
+        elif 'время' in ph or ('котор' in ph and 'ча' in ph):
             return str(datetime.datetime.now()).split()[1].split('.')[0]
-        elif ('как' in phrase and 'дела' in phrase) or \
-                (('чё' in phrase or 'че' in phrase) and 'как' in phrase):
+        elif ('как' in ph and 'дела' in ph) or \
+                (('чё' in ph or 'че' in ph) and 'как' in ph):
             self.flag_how_are_you = True
             return choice(['Всё в порядке.', 'Просто отлично!', 'Волшебно!',
                            'Феерично!', 'Всё классно.']) + ' А у вас как?'
-        elif 'хорошо' in phrase or 'нормально' in phrase or 'тоже' in phrase \
-                or 'феерично' in phrase or 'волшебно' in phrase or 'отлично' \
-                in phrase or 'классно' in phrase or 'прекрасно' in phrase or \
-                ':)' in phrase or 'дельно' in phrase or 'аналогично' in phrase \
-                or 'намана' in phrase or 'норм' in phrase or 'живу' in phrase \
-                or ('кушать' in phrase and 'хочу' in phrase):
+        elif 'хорошо' in ph or 'нормально' in ph or 'тоже' in ph \
+                or 'феерично' in ph or 'волшебно' in ph or 'отлично' \
+                in ph or 'классно' in ph or 'прекрасно' in ph or \
+                ':)' in ph or 'дельно' in ph or 'аналогично' in ph \
+                or 'намана' in ph or 'норм' in ph or 'живу' in ph \
+                or ('кушать' in ph and 'хочу' in ph):
             if self.flag_how_are_you:
                 self.flag_how_are_you = False
                 return choice(['Я за вас рада!', 'Как же это прекрасно!',
                                'Вот и чудненько!'])
             else:
                 return choice(['Что вы имеете ввиду?', 'Что, что?'])
-        elif 'плохо' in phrase or 'отвратительно' in phrase or 'ужасно' in \
-                phrase or ':(' in phrase or 'плоховато' in phrase or \
-                ('так' in phrase and 'себе' in phrase):
+        elif 'плохо' in ph or 'отвратительно' in ph or 'ужасно' in \
+                ph or ':(' in ph or 'плоховато' in ph or \
+                ('так' in ph and 'себе' in ph):
             return 'Не беспокойтесь, всё будет хорошо.'
-        elif ('завтра' in phrase or 'планируешь' in phrase or 'хочешь' in
-              phrase or 'думаешь' in phrase) or ('заняться' in phrase or
-                                                 'занимаешься' in phrase
-                                                 or 'заниматься' in phrase) \
-                and 'чем' in phrase:
+        elif ('завтра' in ph or 'планируешь' in ph or 'хочешь' in
+              ph or 'думаешь' in ph) or ('заняться' in ph or
+                                         'занимаешься' in ph
+                                         or 'заниматься' in ph) \
+                and 'чем' in ph:
             return choice(['Мне охото', 'Я думаю', 'Я планирую', 'Я собираюсь',
                            'Я хочу']) + choice([' отдохнуть на диванчике!',
                                                 ' ничего не делать...',
@@ -146,42 +146,44 @@ class Bot(QWidget):  # y = 21, x = 63
                                                 ' приготовить вкусный ужин',
                                                 ' работать над проектом',
                                                 ' спать весь день', ' учить PyQT'])
-        elif (('как' in phrase or 'какое' in phrase) and
-              ('тебя' in phrase or 'ты' in phrase) and (
-                      'зовут' in phrase, 'имя' in phrase, 'название' in phrase)) \
-                or ('кто' in phrase and 'ты' in phrase):
+        elif (('как' in ph or 'какое' in ph) and
+              ('тебя' in ph or 'ты' in ph) and (
+                      'зовут' in ph, 'имя' in ph, 'название' in ph)) \
+                or ('кто' in ph and 'ты' in ph):
             return choice(
                 ['А как вы думаете?', 'Меня зовут Mimino', 'Я Mimino',
                  'Моё имя Mimino'])
-        elif 'мне' in phrase and 'скучно' in phrase:
+        elif 'мне' in ph and 'скучно' in ph:
             return 'Попробуйте ' + choice(['погулять', 'поиграть', 'отдохнуть',
                                            'заняться программированием'])
-        elif 'ты' in phrase and 'человек' in phrase:
+        elif 'ты' in ph and 'человек' in ph:
             return choice(['Нет, я бот', 'Конечно же нет', 'Нет, спасибо',
                            'Нетушки', 'Неа, я не человек'])
-        elif ('твой' in phrase and 'создатель' in phrase) or \
-                ('кто' in phrase and 'твой' in phrase and 'создатель' in phrase) \
-                or ('кто' in phrase and 'тебя' in phrase and 'создал' in phrase):
+        elif ('твой' in ph and 'создатель' in ph) or \
+                ('кто' in ph and 'твой' in ph and 'создатель' in ph) \
+                or ('кто' in ph and 'тебя' in ph and 'создал' in ph):
             return choice(['Disorol', 'Disik', 'Dis', 'Тимур', 'Величайший программист',
                            'Человек']) + choice([', естевственно', ', конечно', ''])
-        elif 'мне' in phrase and 'скучно' in phrase:
+        elif 'мне' in ph and 'скучно' in ph:
             return 'Тогда попробуйте ' + choice(['пойти на прогулку', 'поработать',
                                                  'заняться программированием'])
-        elif ('рандомн' in phrase or 'случайн' in phrase or 'любо' in phrase) and \
-                ('числ' in phrase or 'цифр' in phrase):
+        elif ('рандомн' in ph or 'случайн' in ph or 'любо' in ph) and \
+                ('числ' in ph or 'цифр' in ph):
             return str(randint(1, int(randint(1, 30) * '9')))
-        elif ('рандомн' in phrase or 'случайн' in phrase or 'любо' in phrase) and \
-                ('цвет' in phrase or 'квадрат' in phrase):
+        elif ('рандомн' in ph or 'случайн' in ph or 'любо' in ph) and \
+                ('цвет' in ph or 'квадрат' in ph):
             self.dr = Drawer()
             self.dr.show()
             return choice(['Держите', 'Вот', 'Вам должно понравиться',
                            'Ваши случайные цвета']) + ', просто кликайте по окну'
-        elif 'откр' in phrase or 'включ' in phrase or 'запус' in phrase:
-            return self.open_website(phrase)
-        elif ('очисти' in phrase or 'почисти' in phrase or 'очисть' in phrase
-              or 'почисть' in phrase or 'удали' in phrase) and \
-                ('чат' in phrase or 'чата' in phrase or 'историю' in phrase
-                 or 'переписку' in phrase or 'переписки' in phrase):
+        elif 'откр' in ph or 'включ' in ph or 'запус' in ph:
+            return self.open_website(ph)
+        elif '/:/' in ph:
+            return self.neuron(ph.split()[1])
+        elif ('очисти' in ph or 'почисти' in ph or 'очисть' in ph
+              or 'почисть' in ph or 'удали' in ph) and \
+                ('чат' in ph or 'чата' in ph or 'историю' in ph
+                 or 'переписку' in ph or 'переписки' in ph):
             with open('chat.txt', 'w') as file:
                 file.write('')
                 return choice(['Готово', 'Всё', 'Держите'
@@ -190,75 +192,88 @@ class Bot(QWidget):  # y = 21, x = 63
         else:
             return 'Простите, я вас не поняла'
 
-    def open_website(self, phrase):  # Открытике сайтов
+    def open_website(self, ph):  # Открытике сайтов
         run = choice(['Запускаю', 'Включаю', 'Открываю',
                       'Уже открываю', 'Запускаю сайт', 'Нашла', 'Перехожу по ссылке',
                       'Без проблем', 'Ок',
                       'Сайт уже ждёт вас', 'Держите', 'Ой, что-то нашла'])
-        if 'http' in phrase:
-            p_lst = phrase.split()
+        if 'http' in ph:
+            p_lst = ph.split()
             for i in p_lst:
                 if 'http' in i:
                     link = i
                     break
             webbrowser.open(link)
             return run
-        elif 'ютуб' in phrase or 'ютюб' in phrase or ('you' in phrase and 'tube'
-                                                      in phrase):
+        elif 'ютуб' in ph or 'ютюб' in ph or ('you' in ph and 'tube'
+                                              in ph):
             webbrowser.open('https://www.youtube.com')
             return run
-        elif 'ок' in phrase or 'одноклассник' in phrase or ('ок' in phrase and
-                                                            'ру' in phrase) or \
-                ('ok' in phrase and 'ru' in phrase):
+        elif 'ок' in ph or 'одноклассник' in ph or ('ок' in ph and
+                                                    'ру' in ph) or \
+                ('ok' in ph and 'ru' in ph):
             webbrowser.open('https://ok.ru')
             return run
-        elif 'вк' in phrase or 'vk' in phrase or ('в' in phrase and 'контакте'
-                                                  in phrase):
+        elif 'вк' in ph or 'vk' in ph or ('в' in ph and 'контакте'
+                                          in ph):
             webbrowser.open('https://vk.com')
             return run
-        elif 'переводчик' in phrase or 'translate' in phrase or \
-                ('яндекс' in phrase and 'переводчик' in phrase) or (
-                'yandex' in phrase and 'translate' in phrase):
+        elif 'переводчик' in ph or 'translate' in ph or \
+                ('яндекс' in ph and 'переводчик' in ph) or (
+                'yandex' in ph and 'translate' in ph):
             webbrowser.open('https://translate.yandex.ru/?lang=en-ru')
             return run
-        elif 'эфир' in phrase or 'видео' in phrase:
+        elif 'эфир' in ph or 'видео' in ph:
             webbrowser.open('https://yandex.ru/portal/video?from=tableau_'
                             'yabro&redircnt=1572685958.1&stream_chann'
                             'el=649&stream_active=storefront')
             return run
-        elif 'музыку' in phrase or 'музыка' in phrase or (
-                'yandex' in phrase and 'music' in phrase):
+        elif 'музыку' in ph or 'музыка' in ph or (
+                'yandex' in ph and 'music' in ph):
             webbrowser.open('https://music.yandex.ru/home')
             return run
-        elif 'лицей' in phrase or (
-                'yandex' in phrase and 'lyceum' in phrase):
+        elif 'лицей' in ph or (
+                'yandex' in ph and 'lyceum' in ph):
             webbrowser.open('https://lyceum.yandex.ru')
             return run
-        elif 'облако' in phrase or ('яндекс' in phrase and 'диск' in phrase) or \
-                ('yandex' in phrase and 'disc' in phrase):
+        elif 'облако' in ph or ('яндекс' in ph and 'диск' in ph) or \
+                ('yandex' in ph and 'disc' in ph):
             webbrowser.open('https://disk.yandex.ru')
             return run
-        elif 'гугл' in phrase or 'google' in phrase:
+        elif 'гугл' in ph or 'google' in ph:
             webbrowser.open('https://www.google.ru/')
             return 'Конечно, Яндекс лучше, но держите'
-        elif 'тимур' in phrase or 'тимура' in phrase or \
-                ('disorol' in phrase and 'development' in phrase) or 'дизорол' \
-                in phrase:
+        elif 'тимур' in ph or 'тимура' in ph or \
+                ('disorol' in ph and 'development' in ph) or 'дизорол' \
+                in ph:
             webbrowser.open('https://disoroldevelopment.000webhostapp.com/#sl_i4')
             return run
-        elif 'yandex' in phrase or 'browser' in phrase or 'яндекс' in phrase \
-                or 'браузер' in phrase:
+        elif 'yandex' in ph or 'browser' in ph or 'яндекс' in ph \
+                or 'браузер' in ph:
             webbrowser.open('https://yandex.ru')
             return run
-        elif 'твиттер' in phrase or 'twitter' in phrase or 'твитер' in phrase \
-                or 'twitter' in phrase:
+        elif 'твиттер' in ph or 'twitter' in ph or 'твитер' in ph \
+                or 'twitter' in ph:
             webbrowser.open('https://twitter.com')
             return run
-        elif ('гит' in phrase and 'хаб' in phrase) or ('git' in phrase and 'hub'
-                                                       in phrase) or \
-                ('гет' in phrase and 'хаб' in phrase):
+        elif ('гит' in ph and 'хаб' in ph) or ('git' in ph and 'hub'
+                                               in ph) or \
+                ('гет' in ph and 'хаб' in ph):
             webbrowser.open('https://github.com')
             return run
+
+    def neuron(self, ph):
+        if ph == '1':
+            training_set_inputs = array([[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]])
+            training_set_outputs = array([[0, 1, 1, 0]]).T
+            random.seed(1)
+            synaptic_weights = 2 * random.random((3, 1)) - 1
+            for iteration in range(10000):
+                output = 1 / (1 + exp(-(dot(training_set_inputs, synaptic_weights))))
+                synaptic_weights += dot(training_set_inputs.T, (training_set_outputs - output) * output * (1 - output))
+            return str(1 / (1 + exp(-(dot(array([1, 0, 0]), synaptic_weights)))))
+        else:
+            return choice(['Простите', 'Извините', 'Прошу прощения']) + ', но такой команды не существует'
 
 
 class Drawer(QWidget):  # Рандомный цвет
