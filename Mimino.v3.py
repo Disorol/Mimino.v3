@@ -178,8 +178,13 @@ class Bot(QWidget):  # y = 21, x = 63
                            'Ваши случайные цвета']) + ', просто кликайте по окну'
         elif 'откр' in ph or 'включ' in ph or 'запус' in ph:
             return self.open_website(ph)
-        elif '/:/' in ph:
-            return self.another_commands(ph.split()[1])
+        elif '//' in ph:
+            try:
+                ph = ph.split()
+                ph.remove('//')
+                return self.another_commands(ph)
+            except Exception:
+                return 'Возникла непредвиденная ошибка'
         elif ('очисти' in ph or 'почисти' in ph or 'очисть' in ph
               or 'почисть' in ph or 'удали' in ph) and \
                 ('чат' in ph or 'чата' in ph or 'историю' in ph
@@ -190,6 +195,11 @@ class Bot(QWidget):  # y = 21, x = 63
                                ]) + choice([', чистый чат!',
                                             ', чат очищен!'])
         else:
+            with open('The answers.csv', 'r') as file:
+                read_answers = file.read().split('\n')
+            for i in read_answers:
+                if ph == i.split(';')[0]:
+                    return i.split(';')[1]
             with open('Unknown phrases.txt', 'a') as file:
                 file.write(ph + '\n')
             return 'Простите, я вас не поняла'
@@ -267,7 +277,7 @@ class Bot(QWidget):  # y = 21, x = 63
             return 'Такого я, к сожалению ' + choice(['открыть', 'запустить', 'включить']) + ' не могу'
 
     def another_commands(self, ph):
-        if ph == '1':
+        if ph == 'e-n':
             training_set_inputs = array([[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]])
             training_set_outputs = array([[0, 1, 1, 0]]).T
             random.seed(1)
@@ -276,12 +286,24 @@ class Bot(QWidget):  # y = 21, x = 63
                 output = 1 / (1 + exp(-(dot(training_set_inputs, synaptic_weights))))
                 synaptic_weights += dot(training_set_inputs.T, (training_set_outputs - output) * output * (1 - output))
             return str(1 / (1 + exp(-(dot(array([1, 0, 0]), synaptic_weights)))))
-        elif ph == 'cuf':
+        elif ph == 'cl-ph':
             with open('Unknown phrases.txt', 'w') as file:
                 file.write('')
-                return choice(['Готово', 'Всё', 'Держите'
-                               ]) + choice([', память очищена',
-                                            ', новых слов нет'])
+            return choice(['Готово', 'Всё', 'Держите'
+                           ]) + choice([', память очищена',
+                                        ', новых слов нет'])
+        elif 'cl-ans' in ph:
+            with open('The answers.csv', 'w') as file:
+                file.write('')
+            return choice(['Готово', 'Всё', 'Держите']) + ', файл очищен'
+        elif 'wr-ans' in ph:
+            try:
+                del ph[0]
+                with open('The answers.csv', 'a') as file:
+                    file.write(' '.join(ph) + '\n')
+                return choice(['Готово', 'Всё']) + ', ответ записан'
+            except Exception:
+                return 'Возникла непредвиденная ошибка'
         else:
             return choice(['Простите', 'Извините', 'Прошу прощения']) + ', но такой команды не существует'
 
