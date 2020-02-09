@@ -277,7 +277,7 @@ class Bot(QWidget):  # y = 21, x = 63
             return 'Такого я, к сожалению ' + choice(['открыть', 'запустить', 'включить']) + ' не могу'
 
     def another_commands(self, ph):
-        if ph == 'e-n':
+        if 'e-n' in ph:
             training_set_inputs = array([[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]])
             training_set_outputs = array([[0, 1, 1, 0]]).T
             random.seed(1)
@@ -286,7 +286,7 @@ class Bot(QWidget):  # y = 21, x = 63
                 output = 1 / (1 + exp(-(dot(training_set_inputs, synaptic_weights))))
                 synaptic_weights += dot(training_set_inputs.T, (training_set_outputs - output) * output * (1 - output))
             return str(1 / (1 + exp(-(dot(array([1, 0, 0]), synaptic_weights)))))
-        elif ph == 'cl-ph':
+        elif 'cl-ph' in ph:
             with open('Unknown phrases.txt', 'w') as file:
                 file.write('')
             return choice(['Готово', 'Всё', 'Держите'
