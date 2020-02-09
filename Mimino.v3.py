@@ -290,15 +290,21 @@ class Bot(QWidget):  # y = 21, x = 63
                 synaptic_weights += dot(training_set_inputs.T, (training_set_outputs - output) * output * (1 - output))
             return str(1 / (1 + exp(-(dot(array([1, 0, 0]), synaptic_weights)))))
         elif 'cl-ph' in ph:
-            with open('Unknown phrases.txt', 'w') as file:
-                file.write('')
-            return choice(['Готово', 'Всё', 'Держите'
-                           ]) + choice([', память очищена',
-                                        ', новых слов нет'])
+            try:
+                with open('Unknown phrases.txt', 'w') as file:
+                    file.write('')
+                return choice(['Готово', 'Всё', 'Держите'
+                               ]) + choice([', память очищена',
+                                            ', новых слов нет'])
+            except Exception:
+                return 'Возникла непредвиденная ошибка'
         elif 'cl-ans' in ph:
-            with open('The answers.csv', 'w') as file:
-                file.write('')
-            return choice(['Готово', 'Всё', 'Держите']) + ', файл очищен'
+            try:
+                with open('The answers.csv', 'w') as file:
+                    file.write('')
+                return choice(['Готово', 'Всё', 'Держите']) + ', файл очищен'
+            except Exception:
+                return 'Возникла непредвиденная ошибка'
         elif 'wr-ans' in ph:
             try:
                 del ph[0]
