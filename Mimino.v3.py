@@ -112,6 +112,9 @@ class Bot(QWidget):  # y = 21, x = 63
                            'Здравствуй'])
         elif 'время' in ph or ('котор' in ph and 'ча' in ph):
             return str(datetime.datetime.now()).split()[1].split('.')[0]
+
+        elif 'дата' in ph or ('какой' in ph and 'день' in ph):
+            return '.'.join(str(datetime.datetime.now()).split()[0].split('-'))
         elif ('как' in ph and 'дела' in ph) or \
                 (('чё' in ph or 'че' in ph) and 'как' in ph):
             self.flag_how_are_you = True
