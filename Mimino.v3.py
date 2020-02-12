@@ -4,6 +4,7 @@ import webbrowser
 from numpy import exp, array, random, dot
 from random import choice, randint
 import pyttsx3
+from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter, QColor
 from PyQt5.QtWidgets import QLabel, QLineEdit, \
@@ -12,6 +13,7 @@ from PyQt5.QtWidgets import QLabel, QLineEdit, \
 
 class Bot(QWidget):  # y = 21, x = 63
     def __init__(self):
+        self.main_color = 'lightgray'
         self.flag_voice = True
         self.flag_how_are_you = False
         self.flag_q = False
@@ -29,6 +31,9 @@ class Bot(QWidget):  # y = 21, x = 63
                 coord_y = 0
                 for ___ in range(26):
                     self.frame = QLabel(self)
+                    self.pal = self.frame.palette()
+                    self.pal.setColor(QtGui.QPalette.WindowText, QtGui.QColor(self.main_color))
+                    self.frame.setPalette(self.pal)
                     self.frame.setText("|")
                     self.frame.move(5 + coord_x, 59 + coord_y)
                     coord_y += 11
@@ -39,6 +44,9 @@ class Bot(QWidget):  # y = 21, x = 63
             coord_x = 0
             for __ in range(487):
                 self.frame = QLabel(self)
+                self.pal = self.frame.palette()
+                self.pal.setColor(QtGui.QPalette.WindowText, QtGui.QColor(self.main_color))
+                self.frame.setPalette(self.pal)
                 self.frame.setText(".")
                 self.frame.move(5 + coord_x, 51 + coord_y)
                 coord_x += 1
