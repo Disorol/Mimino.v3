@@ -205,10 +205,8 @@ class Bot(QWidget):  # y = 21, x = 63
             return 'Простите, я вас не поняла'
 
     def open_website(self, ph):  # Открытике сайтов
-        run = choice(['Запускаю', 'Включаю', 'Открываю',
-                      'Уже открываю', 'Запускаю сайт', 'Нашла', 'Перехожу по ссылке',
-                      'Без проблем', 'Ок',
-                      'Сайт уже ждёт вас', 'Держите', 'Ой, что-то нашла'])
+        run = choice(['Запускаю', 'Включаю', 'Открываю', 'Уже открываю', 'Запускаю сайт', 'Нашла', 'Перехожу по ссылке',
+                      'Без проблем', 'Ок', 'Сайт уже ждёт вас', 'Держите', 'Ой, что-то нашла'])
         if 'http' in ph:
             p_lst = ph.split()
             for i in p_lst:
@@ -236,9 +234,8 @@ class Bot(QWidget):  # y = 21, x = 63
             webbrowser.open('https://translate.yandex.ru/?lang=en-ru')
             return run
         elif 'эфир' in ph or 'видео' in ph:
-            webbrowser.open('https://yandex.ru/portal/video?from=tableau_'
-                            'yabro&redircnt=1572685958.1&stream_chann'
-                            'el=649&stream_active=storefront')
+            webbrowser.open('https://yandex.ru/portal/video?from=tableau_yabro&redircnt=1572685958.1&stream_channel=649'
+                            '&stream_active=storefront')
             return run
         elif 'музыку' in ph or 'музыка' in ph or (
                 'yandex' in ph and 'music' in ph):
@@ -276,8 +273,8 @@ class Bot(QWidget):  # y = 21, x = 63
         else:
             return 'Такого я, к сожалению ' + choice(['открыть', 'запустить', 'включить']) + ' не могу'
 
-    def another_commands(self, ph):
-        if 'e-n' in ph:
+    def another_commands(self, ph):  # Прочие команды. Начало строки: "/:/"
+        if 'e-n' in ph:  # Пример работы нейронной сети
             training_set_inputs = array([[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]])
             training_set_outputs = array([[0, 1, 1, 0]]).T
             random.seed(1)
@@ -286,21 +283,21 @@ class Bot(QWidget):  # y = 21, x = 63
                 output = 1 / (1 + exp(-(dot(training_set_inputs, synaptic_weights))))
                 synaptic_weights += dot(training_set_inputs.T, (training_set_outputs - output) * output * (1 - output))
             return str(1 / (1 + exp(-(dot(array([1, 0, 0]), synaptic_weights)))))
-        elif 'cl-ph' in ph:
+        elif 'cl-ph' in ph:  # Очистка файла, в который записываются неизвестные слова
             try:
                 with open('Unknown phrases.txt', 'w') as file:
                     file.write('')
                 return choice(['Готово', 'Всё', 'Держите']) + choice([', память очищена', ', новых слов нет'])
             except Exception:
                 return 'Возникла непредвиденная ошибка'
-        elif 'cl-ans' in ph:
+        elif 'cl-ans' in ph:  # Очистка файла с пользовательскими ответами
             try:
                 with open('The answers.csv', 'w') as file:
                     file.write('')
                 return choice(['Готово', 'Всё', 'Держите']) + ', файл очищен'
             except Exception:
                 return 'Возникла непредвиденная ошибка'
-        elif 'wr-ans' in ph:
+        elif 'wr-ans' in ph:  # Запись нового ответа в файл с пользовательскими ответами в формате: "Фраза:ответ"
             try:
                 del ph[0]
                 with open('The answers.csv', 'a') as file:
@@ -312,7 +309,7 @@ class Bot(QWidget):  # y = 21, x = 63
             return choice(['Простите', 'Извините', 'Прошу прощения']) + ', но такой команды не существует'
 
 
-class Drawer(QWidget):  # Рандомный цвет
+class Drawer(QWidget):  # Класс для подбора случайного цвета
     def __init__(self):
         super().__init__()
         self.initUI()
